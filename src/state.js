@@ -1,6 +1,6 @@
 class Handlers {
   constructor(handlers = []) {
-    Object.defineProperty(this, '__handlers__', {
+    Object.defineProperty(this, "__handlers__", {
       enumerable: false,
       configurable: false,
       value: new Set([])
@@ -20,16 +20,20 @@ class Handlers {
   drop(handler) {
     this.__handlers__.delete(handler);
   }
+
+  runAll(data) {
+    this.__handlers__.forEach(handler => handler(data));
+  }
 }
 
 export class State {
   constructor(initialState = {}, handlers = []) {
-    Object.defineProperty(this, '__state__', {
+    Object.defineProperty(this, "__state__", {
       enumerable: false,
       configurable: false,
       value: {}
     });
-    Object.defineProperty(this, '__handlers__', {
+    Object.defineProperty(this, "__handlers__", {
       enumerable: false,
       configurable: false,
       value: new Handlers(handlers)
@@ -39,7 +43,7 @@ export class State {
   }
 
   __runHandlers() {
-    this.__handlers__.forEach(handler => handler(this.get()));
+    this.__handlers__.runAll(this.get());
   }
 
   __changeStateItems(diffObj) {
@@ -60,7 +64,7 @@ export class State {
 
         this.__runHandlers();
       }
-    })
+    });
   }
 
   get() {
